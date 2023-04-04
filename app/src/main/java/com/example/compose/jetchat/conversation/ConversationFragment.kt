@@ -170,7 +170,8 @@ class ConversationFragment : Fragment() {
                     .setName(message.author)
                     .setIcon(person.icon)
                     .build()
-            ).setShortcutInfo(shortcut)
+            )
+            .setShortcutInfo(shortcut)
             .setContentIntent(
                 PendingIntent.getActivity(
                     context,
@@ -214,7 +215,7 @@ class ConversationFragment : Fragment() {
     ): NotificationCompat.Action {
         val timestamp = Date().time
 
-        var remoteInput = RemoteInput.Builder(KEY_TEXT_REPLY).run {
+        val remoteInput = RemoteInput.Builder(KEY_TEXT_REPLY).run {
             setLabel(resources.getString(R.string.remote_input_label))
             build()
         }
@@ -231,7 +232,7 @@ class ConversationFragment : Fragment() {
             putExtra(MSG_TIMESTAMP, timestamp)
             putExtra(MSG_NOTIFICATION_SHORTCUT_ID, shortcut.id)
         }
-        var replyPendingIntent =
+        val replyPendingIntent =
             PendingIntent.getBroadcast(
                 context,
                 REQUEST_CONTENT,

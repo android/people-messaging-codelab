@@ -41,7 +41,7 @@ class ReplyReceiver : BroadcastReceiver() {
         // If there is a shortcut ID in the intent then this reply is in response to an already
         // existing notification that generated a shortcut
         if (shortcutId.isNotEmpty()) {
-            val shortcut = ConversationUtil.generateShortcut(context, "me")
+            val shortcut = ConversationUtil.generateShortcut(context, shortcutId)
             ShortcutManagerCompat.pushDynamicShortcut(context!!, shortcut)
         }
     }
