@@ -63,7 +63,6 @@ class ConversationFragment : Fragment() {
 
     companion object {
         private const val REQUEST_CONTENT = 1
-        private const val REQUEST_BUBBLE = 2
         private const val SEND_NOTIFICATION_ACTION = "com.example.compose.jetchat.conversation.NOTIFICATION_ACTION"
         const val MSG_AUTHOR =  "author"
         const val MSG_AUTHOR_IMG =  "authorImg"
@@ -117,7 +116,6 @@ class ConversationFragment : Fragment() {
 
     override fun onPause() {
         super.onPause()
-        // TODO(alabiaga): Request special POST NOTIFICATION permission from user
         if (exampleUiState.messages.isNotEmpty()) {
             ConversationUtil.setUpNotificationChannels(context!!)
             // Only simulate response if the most recent message was from user
@@ -171,7 +169,6 @@ class ConversationFragment : Fragment() {
                     .setIcon(person.icon)
                     .build()
             )
-            .setShortcutInfo(shortcut)
             .setContentIntent(
                 PendingIntent.getActivity(
                     context,
@@ -189,22 +186,13 @@ class ConversationFragment : Fragment() {
                         person
                     )
                 )
-            ).setSmallIcon(R.drawable.ic_message)
-            .setBubbleMetadata(createBubbleMetadata(person.icon!!))
+            )
+            .setBubbleMetadata(ConversationUtil.createBubbleMetadata(context!!, person.icon!!))
+            .setShortcutInfo(shortcut)
+            .setSmallIcon(R.drawable.ic_message)
+            .setBubbleMetadata(ConversationUtil.createBubbleMetadata(context!!, person.icon!!))
             .addAction(replyAction)
             .setShowWhen(true)
-            .build()
-    }
-
-    private fun createBubbleMetadata(icon: IconCompat): NotificationCompat.BubbleMetadata {
-        // Create bubble intent
-        val target = Intent(context, NavActivity::class.java)
-        val bubbleIntent = PendingIntent.getActivity(context, REQUEST_BUBBLE, target,  ConversationUtil.flagUpdateCurrent(mutable = true))
-
-        // Create bubble metadata
-        return NotificationCompat.BubbleMetadata.Builder(bubbleIntent, icon)
-            .setDesiredHeight(400)
-            .setSuppressNotification(true)
             .build()
     }
 
@@ -230,7 +218,9 @@ class ConversationFragment : Fragment() {
             putExtra(MSG_AUTHOR, message.author)
             putExtra(MSG_AUTHOR_IMG, message.authorImage)
             putExtra(MSG_TIMESTAMP, timestamp)
-            putExtra(MSG_NOTIFICATION_SHORTCUT_ID, shortcut.id)
+            if (shortcut != null) {
+                putExtra(MSG_NOTIFICATION_SHORTCUT_ID, shortcut.id)
+            }
         }
         val replyPendingIntent =
             PendingIntent.getBroadcast(

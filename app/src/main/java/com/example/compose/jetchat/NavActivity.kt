@@ -16,6 +16,7 @@
 
 package com.example.compose.jetchat
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -37,8 +38,12 @@ import androidx.navigation.fragment.NavHostFragment
 import com.example.compose.jetchat.components.JetchatScaffold
 import com.example.compose.jetchat.conversation.BackPressHandler
 import com.example.compose.jetchat.conversation.LocalBackPressedDispatcher
+import com.example.compose.jetchat.conversation.Message
+import com.example.compose.jetchat.conversation.util.ConversationUtil
+import com.example.compose.jetchat.data.exampleUiState
 import com.example.compose.jetchat.databinding.ContentMainBinding
 import kotlinx.coroutines.launch
+import java.util.Date
 
 /**
  * Main activity for the app.
@@ -104,6 +109,32 @@ class NavActivity : AppCompatActivity() {
                 }
             }
         )
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        if (intent != null) {
+            handleIntent(intent)
+        }
+    }
+
+    private fun handleIntent(intent: Intent) {
+        when (intent.action) {
+            // Invoked when a text is shared through Direct Share.
+            Intent.ACTION_SEND -> {
+                val time = Date().time
+                val timestamp = ConversationUtil.getTimeFormatted(time)
+                val text = intent.getStringExtra(Intent.EXTRA_TEXT)
+
+                exampleUiState.addMessage(
+                    Message(
+                        "me",
+                        text!!,
+                        timestamp
+                    )
+                )
+            }
+        }
     }
 
     override fun onSupportNavigateUp(): Boolean {

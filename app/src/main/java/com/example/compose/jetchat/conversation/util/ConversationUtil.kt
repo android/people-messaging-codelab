@@ -7,8 +7,10 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.core.app.NotificationCompat
 import androidx.core.content.getSystemService
 import androidx.core.content.pm.ShortcutInfoCompat
+import androidx.core.graphics.drawable.IconCompat
 import com.example.compose.jetchat.NavActivity
 import com.example.compose.jetchat.R
 import java.text.SimpleDateFormat
@@ -17,6 +19,7 @@ import java.util.Date
 class ConversationUtil {
 
     companion object {
+        const val REQUEST_BUBBLE = 2;
         const val CHANNEL_MESSAGES = "jetChatNotificationChannel"
         private const val CATEGORY_SHARE = "com.example.compose.jetchat.share.TEXT_SHARE_TARGET"
         val dateFormat = SimpleDateFormat("hh:mm aa")
@@ -65,6 +68,18 @@ class ConversationUtil {
                 .setShortLabel(shortcutId)
                 .setLongLabel(shortcutId)
                 .setIntent(Intent(context, NavActivity::class.java).setAction(Intent.ACTION_VIEW))
+                .build()
+        }
+
+        fun createBubbleMetadata(context: Context, icon: IconCompat): NotificationCompat.BubbleMetadata {
+            // Create bubble intent
+            val target = Intent(context, NavActivity::class.java)
+            val bubbleIntent = PendingIntent.getActivity(context, REQUEST_BUBBLE, target, flagUpdateCurrent(mutable = true))
+
+            // Create bubble metadata
+            return NotificationCompat.BubbleMetadata.Builder(bubbleIntent, icon)
+                .setDesiredHeight(400)
+                .setSuppressNotification(true)
                 .build()
         }
     }
