@@ -6,7 +6,6 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.core.content.getSystemService
 import androidx.core.content.pm.ShortcutInfoCompat
@@ -14,7 +13,6 @@ import androidx.core.graphics.drawable.IconCompat
 import com.example.compose.jetchat.NavActivity
 import com.example.compose.jetchat.R
 import java.text.SimpleDateFormat
-import java.util.Date
 
 class ConversationUtil {
 

@@ -23,10 +23,12 @@
         <item
             android:id="@+id/nav_home"
             android:icon="@drawable/ic_jetchat"
-            android:title="@string/conversations" />
+            android:title="@string/conversations"
+            android:contentDescription="Chat navigation item" />
         <item
             android:id="@+id/nav_profile"
             android:icon="@drawable/ic_baseline_person_24"
-            android:title="@string/profile" />
+            android:title="@string/profile"
+            android:contentDescription="Profile navigation item"/>
     </group>
 </menu>

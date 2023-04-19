@@ -19,11 +19,12 @@
 ---
 status:       PUBLISHED
 technologies: [Android]
-categories:   [Compose]
+categories:   [Notifications]
 languages:    [Kotlin]
 solutions:    [Mobile]
-github:       android/compose-samples
+github:       android/people-messaging-codelab
 level:        BEGINNER
 apiRefs:
-    - android:androidx.compose.Composable
+    - android:androidx.core.app.NotificationCompat
+    - android:androidx.core.content.pm.ShortcutInfoCompat
 license: apache2
