@@ -15,4 +15,7 @@
  */
 
 include ':app'
-rootProject.name = "Jetchat"
+rootProject.name = "PeopleMessaging"
+
+include ':PeopleMessaging_End:app'
+include ':PeopleMessaging_Start:app'
