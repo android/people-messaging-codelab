@@ -62,7 +62,6 @@ class ConversationFragment : Fragment() {
 
     companion object {
         private const val REQUEST_CONTENT = 1
-        private const val REQUEST_BUBBLE = 2
         private const val SEND_NOTIFICATION_ACTION = "com.example.compose.jetchat.conversation.NOTIFICATION_ACTION"
         const val MSG_AUTHOR =  "author"
         const val MSG_AUTHOR_IMG =  "authorImg"
@@ -160,10 +159,6 @@ class ConversationFragment : Fragment() {
         time: Long
     ): Notification {
         val replyAction = generateReplyAction(notificationId, message, shortcut)
-        val person = Person.Builder()
-            .setName(message.author)
-            .setIcon(person.icon)
-            .build()
         return NotificationCompat.Builder(context!!, ConversationUtil.CHANNEL_MESSAGES)
             .addPerson(person)
             .setContentIntent(

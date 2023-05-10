@@ -163,12 +163,7 @@ class ConversationFragment : Fragment() {
     ): Notification {
         val replyAction = generateReplyAction(notificationId, message, shortcut)
         return NotificationCompat.Builder(context!!, ConversationUtil.CHANNEL_MESSAGES)
-            .addPerson(
-                Person.Builder()
-                    .setName(message.author)
-                    .setIcon(person.icon)
-                    .build()
-            )
+            .addPerson(person)
             .setContentIntent(
                 PendingIntent.getActivity(
                     context,
