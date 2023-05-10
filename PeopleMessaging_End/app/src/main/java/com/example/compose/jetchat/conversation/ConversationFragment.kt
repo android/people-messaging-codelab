@@ -22,13 +22,16 @@ import android.app.Notification
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.navigationBars
@@ -41,6 +44,7 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationCompat.Action.SEMANTIC_ACTION_REPLY
 import androidx.core.app.Person
 import androidx.core.app.RemoteInput
+import androidx.core.content.ContextCompat
 import androidx.core.content.getSystemService
 import androidx.core.content.pm.ShortcutInfoCompat
 import androidx.core.content.pm.ShortcutManagerCompat
@@ -53,7 +57,6 @@ import com.example.compose.jetchat.MainViewModel
 import com.example.compose.jetchat.NavActivity
 import com.example.compose.jetchat.R
 import com.example.compose.jetchat.conversation.util.ConversationUtil
-import com.example.compose.jetchat.data.PermissionRequest
 import com.example.compose.jetchat.data.exampleUiState
 import com.example.compose.jetchat.theme.JetchatTheme
 import java.util.Date
@@ -72,9 +75,12 @@ class ConversationFragment : Fragment() {
         const val MSG_TIMESTAMP =  "timestamp"
     }
 
-    @SuppressLint("InlinedApi") // POST_NOTIFICATIONS is automatically granted on API<33.
-    private val permissionRequest = PermissionRequest(this, Manifest.permission.POST_NOTIFICATIONS)
     private val activityViewModel: MainViewModel by activityViewModels()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        requestPermissionIfNecessary()
+        super.onCreate(savedInstanceState)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -123,6 +129,23 @@ class ConversationFragment : Fragment() {
                 simulateResponseAsANotification()
             }
         }
+    }
+
+    private fun requestPermissionIfNecessary() {
+        if (Build.VERSION.SDK_INT < 33) return
+        val permission = Manifest.permission.POST_NOTIFICATIONS
+        if (ContextCompat.checkSelfPermission(requireContext(), permission)
+            == PackageManager.PERMISSION_GRANTED
+        ) {
+            return
+        }
+        registerForActivityResult(
+            ActivityResultContracts.RequestPermission()
+        ) { granted ->
+            if (!granted) {
+                requireActivity().finish()
+            }
+        }.launch(permission)
     }
 
     /**
